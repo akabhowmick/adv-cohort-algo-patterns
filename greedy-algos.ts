@@ -6,7 +6,17 @@
 // You can assign at most one cookie per child using a greedy approach.
 
 function findContentChildren(g, s) {
-  // Implement greedy logic
+  g.sort((a, b) => a - b);
+  s.sort((a, b) => a - b);
+  let i = 0;
+  let j = 0;
+  while (i < g.length && j < s.length) {
+    if (s[j] >= g[i]) {
+      i++;
+    }
+    j++;
+  }
+  return i;
 }
 
 // Test Cases
@@ -20,7 +30,12 @@ console.log(findContentChildren([], [1, 2, 3])); // Edge Case: No children
 // Use a greedy approach to maximize the reach.
 
 function canJump(nums) {
-  // Implement greedy logic
+  let maxReach = 0;
+  for (let i = 0; i < nums.length; i++) {
+    if (i > maxReach) return false;
+    maxReach = Math.max(maxReach, i + nums[i]);
+  }
+  return true;
 }
 
 // Test Cases
@@ -35,7 +50,14 @@ console.log(canJump([3, 2, 1, 0, 4])); // Edge Case: Cannot reach last index
 // Use a greedy approach to minimize idle time.
 
 function leastInterval(tasks, n) {
-  // Implement greedy logic
+  const freq = new Map<string, number>();
+  for (const task of tasks) {
+    freq.set(task, (freq.get(task) || 0) + 1);
+  }
+  const maxFreq = Math.max(...Array.from(freq.values()));
+  const maxCount = Array.from(freq.values()).filter((f) => f === maxFreq).length;
+  const minTime = (maxFreq - 1) * (n + 1) + maxCount;
+  return Math.max(minTime, tasks.length);
 }
 
 // Test Cases
@@ -50,7 +72,20 @@ console.log(leastInterval(["A", "B", "C", "D"], 0)); // Edge Case: No cooldown p
 // If it's not possible, return -1. Use a greedy approach to find the optimal starting station.
 
 function canCompleteCircuit(gas, cost) {
-  // Implement greedy logic
+  let totalGas = 0;
+  let totalCost = 0;
+  let start = 0;
+  let currentGas = 0;
+  for (let i = 0; i < gas.length; i++) {
+    totalGas += gas[i];
+    totalCost += cost[i];
+    currentGas += gas[i] - cost[i];
+    if (currentGas < 0) {
+      start = i + 1;
+      currentGas = 0;
+    }
+  }
+  return totalGas >= totalCost ? start : -1;
 }
 
 // Test Cases
